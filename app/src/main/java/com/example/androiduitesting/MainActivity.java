@@ -2,7 +2,9 @@ package com.example.androiduitesting;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,27 +44,23 @@ public class MainActivity extends AppCompatActivity {
         cityList.setAdapter(cityAdapter);
 
         final Button addButton = findViewById(R.id.button_add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                nameField.setVisibility(View.VISIBLE);
-            }
-        });
+        addButton.setOnClickListener(v -> nameField.setVisibility(View.VISIBLE));
 
         final Button confirmButton = findViewById(R.id.button_confirm);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String cityName = newName.getText().toString();
-                cityAdapter.add(cityName);
-                newName.getText().clear();
-                nameField.setVisibility(View.INVISIBLE);
-            }
+        confirmButton.setOnClickListener(v -> {
+            String cityName = newName.getText().toString();
+            cityAdapter.add(cityName);
+            newName.getText().clear();
+            nameField.setVisibility(View.INVISIBLE);
         });
 
         final Button deleteButton = findViewById(R.id.button_clear);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                cityAdapter.clear();
-            }
+        deleteButton.setOnClickListener(v -> cityAdapter.clear());
+
+        cityList.setOnItemClickListener((adapterView, view, position, id) -> {
+            Intent intent = new Intent(MainActivity.this, ShowActivity.class);
+            intent.putExtra("name", (String)adapterView.getItemAtPosition(position));
+            startActivity(intent);
         });
     }
 }
